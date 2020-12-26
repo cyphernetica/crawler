@@ -1,4 +1,4 @@
-import mysql.connector
+import MySQLdb
 
 class Storage:
     def __init__(self):
@@ -9,7 +9,8 @@ class Storage:
             'database': 'crawler',
             'raise_on_warnings': True
         }
-        self.cnx = mysql.connector.connect(**self.config)
+        #self.cnx = mysql.connector.connect(**self.config)
+        self.cnx = MySQLdb.connect( self.config.get('host' , '127.0.0.1'), self.config.get('user', 'root'), self.config.get('password', 'root'), self.config.get('database', 'crawler') )
         self.cursor = self.cnx.cursor()
 
     def save(self,url):
@@ -22,7 +23,6 @@ class Storage:
         sql = "select url from indexes where url='"+url+"'"
         self.cursor.execute(sql)
         myresult = self.cursor.fetchall()
-        print(len(myresult))
         if len(myresult) == 0:
             return False
         return True
